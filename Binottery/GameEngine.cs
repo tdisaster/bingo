@@ -8,184 +8,233 @@ using Binottery.Util;
 
 namespace Binottery
 {
-	public class GameEngine
-	{
-		private static Random _rand = new Random();
+    public class GameEngine
+    {
+        private static Random _rand = new Random();
 
-		public GameStage Stage { get; set; } = GameStage.MainMenu;
+        public GameStage Stage { get; set; } = GameStage.MainMenu;
 
-		private IGamePersister Persister { get; }
+        private IGamePersister Persister { get; }
 
-		public GameEngine(IGamePersister persister)
-		{
-			Persister = persister;
-		}
+        private int currentLuckyNumbers {get;set;} = 0;
 
-		public void Print()
-		{
-			Printer.PrintAvailableOptions(Stage);
-		}
+        public GameEngine(IGamePersister persister)
+        {
+            Persister = persister;
+        }
 
-		private static List<int> _possibileNumbersForColumn;
-		private static State State { get; set; }
-		private static List<int> FlatListFromMatrice { get; set; }
-		public bool InGame { get; private set; }
+        public void Print()
+        {
+            Printer.PrintAvailableOptions(Stage);
+        }
 
-		#region Options
+        private static State State { get; set; }
+        public bool InGame { get; private set; }
 
-		public void NewGame()
-		{
-			Stage = GameStage.Started;
-			//TODO generate new values
-			Printer.ClearScreen();
-			Printer.PrintGrid(State);
-			Printer.PrintAvailableOptions(Stage);
-		}
+        #region Options
 
-		public void ContinueGame()
-		{
-			LoadState();
-			Stage = GameStage.Started;
-			Printer.ClearScreen();
-			Printer.PrintAvailableOptions(Stage);
-		}
+        public void NewGame()
+        {
+            State = new State();
+            Stage = GameStage.Started;
 
-		public void NewSession()
-		{
-			GenerateRandomMatrix();
-			GenerateRandomWinningNumbers();
+            GenerateRandomMatrix();
+            GenerateRandomWinningNumbers();
 
-			Stage = GameStage.InGame;
-			Printer.ClearScreen();
-			Printer.PrintGrid(State);
-			Printer.PrintAvailableOptions(Stage);
-		}
+            Printer.ClearScreen();
+            Printer.PrintAvailableOptions(Stage);
 
-		public void EndSession()
-		{
-			Stage = GameStage.Started;
-			Printer.ClearScreen();
-			Printer.PrintScore();
-			Printer.PrintAvailableOptions(Stage);
-		}
+            Read();
+        }
 
-		public void ExitGame()
-		{
-			//Save state
-			SaveState();
-			Environment.Exit(1);
-		}
+        public void ContinueGame()
+        {
+            LoadState();
+            Stage = GameStage.Started;
+            Printer.ClearScreen();
+            Printer.PrintAvailableOptions(Stage);
 
-		#endregion
+            Read();
+        }
 
-		private void SaveState()
-		{
-			Persister.Save(State);
-		}
+        public void NewSession()
+        {
+            if (Stage == GameStage.InGame || Stage == GameStage.EndGame)
+            {
+                State.UserNumbers = new List<int>();
+                GenerateRandomMatrix();
+                GenerateRandomWinningNumbers();
+            }
 
-		private void LoadState()
-		{
-			State = Persister.Load();
-		}
+            Stage = GameStage.InGame;
+            Printer.ClearScreen();
+            Printer.PrintGrid(State);
+            Printer.PrintAvailableOptions(Stage);
 
-		public void StartGame()
-		{
-			GenerateRandomMatrix();
-			GenerateRandomWinningNumbers();
-			Printer.PrintGrid(State);
-		}
+            Read();
+        }
 
-		public bool VerifyNumber(int userNumber)
-		{
-			if (FlatListFromMatrice.Contains(userNumber))
-			{
-				Printer.ClearScreen();
-				State.UserNumbers.Add(userNumber);
-				Printer.PrintGrid(State);
-				Printer.PrintEmptyLines(2);
-				//TODO set stage
-				Printer.PrintAvailableOptions(Stage);
-				return true;
-			}
-			else
-			{
-				Printer.PrintInvalidNumber(userNumber);
-				return false;
-			}
-		}
+        public void EndSession()
+        {
+            Stage = GameStage.Started;
+            Printer.ClearScreen();
+            Printer.PrintScore(State.UserCredit);
+            Printer.PrintAvailableOptions(Stage);
 
-		private static void GenerateRandomMatrix()
-		{
-			FlatListFromMatrice = new List<int>();
-			int currentNumber;
+            Read();
+        }
 
-			for (var colNumber = 0; colNumber < Constants.MatrixNumberOfColumns; colNumber++)
-			{
-				_possibileNumbersForColumn = Helper.FillListFromRange(colNumber * 10, colNumber * 10 + 9);
+        public void ExitGame()
+        {
+            //Save state
+            SaveState();
+            Environment.Exit(1);
+        }
 
-				for (var rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
-				{
-					currentNumber = _possibileNumbersForColumn[_rand.Next(0, _possibileNumbersForColumn.Count)];
-					_possibileNumbersForColumn.Remove(currentNumber);
-					FlatListFromMatrice.Add(currentNumber);
-					//TODO
-					//State.GeneratedNumbers[colNumber, rowNumber] = currentNumber;
-				}
-			}
-		}
+        #endregion
 
-		private static void GenerateRandomWinningNumbers()
-		{
-			int currentNumber;
-			var auxFlatMatrice = FlatListFromMatrice.ToList();
-			for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
-			{
-				currentNumber = auxFlatMatrice[_rand.Next(0, auxFlatMatrice.Count)];
-				State.WinningNumbers[index] = currentNumber;
-				auxFlatMatrice.Remove(currentNumber);
-			}
-		}
+        private void SaveState()
+        {
+            Persister.Save(State);
+        }
 
-		public void Read()
-		{
-			var input = Console.ReadLine()?.Trim();
-			//TODO validate input based on current state
-			switch (input)
-			{
-				case Constants.NewGame:
-					NewGame();
-					break;
-				case Constants.ContinueGame:
-					ContinueGame();
-					break;
-				case Constants.NewSession:
-					NewSession();
-					break;
-				case Constants.EndSession:
-					EndSession();
-					break;
-				case Constants.ExitGame:
-					ExitGame();
-					break;
-				default:
-					int userNumber;
-					if (int.TryParse(input, out userNumber))
-					{
-						if (VerifyNumber(userNumber))
-						{
-							//TODO
-						}
-						else
-						{
-							//TODO
-						}
-					}
-					else
-					{
-						Printer.PrintInvalidInput();
-					}
-					break;
-			}
-		}
-	}
+        private void LoadState()
+        {
+            State = Persister.Load();
+        }
+
+        public void StartGame()
+        {
+            GenerateRandomMatrix();
+            GenerateRandomWinningNumbers();
+            Printer.PrintGrid(State);
+        }
+
+        public bool VerifyNumber(int userNumber)
+        {
+            if (State.GeneratedNumbers.Contains(userNumber))
+            {
+                return true;
+            }
+            else
+            {
+                Printer.PrintInvalidNumber(userNumber);
+                return false;
+            }
+        }
+
+        public void GoToNextStep(int userNumber)
+        {
+            Printer.ClearScreen();
+            State.UserNumbers.Add(userNumber);
+            Printer.PrintGrid(State);
+            Printer.PrintEmptyLines(2);
+
+            if (State.WinningNumbers.Contains(userNumber))
+            {
+                currentLuckyNumbers++;
+            }
+
+            if (State.UserNumbers.Count == 5)
+            {
+                State.UserCredit += currentLuckyNumbers;
+                if (currentLuckyNumbers == 5)
+                {
+                    State.UserCredit *= 2;
+                }
+                Stage = GameStage.EndGame;
+                Printer.PrintScore(State.UserCredit);
+                Printer.PrintAvailableOptions(Stage);
+            }
+            else
+            {
+                Printer.PrintAvailableOptions(Stage);
+            }
+
+            Read();
+        }
+
+        private static void GenerateRandomMatrix()
+        {
+            NumberGenerator numberGenerator = new NumberGenerator();
+
+            for (var colNumber = 0; colNumber < Constants.MatrixNumberOfColumns; colNumber++)
+            {
+                var numbers = numberGenerator.GenerateNumbers(colNumber);
+                for (int index = 0; index < Constants.MatrixNumberOfRows; index++)
+                {
+                    State.GeneratedNumbers[colNumber * 3 + index] = numbers[index];
+                }
+            }
+        }
+
+        private static void GenerateRandomWinningNumbers()
+        {
+            int currentNumber;
+            var auxFlatMatrice = State.GeneratedNumbers.ToList();
+            for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
+            {
+                currentNumber = auxFlatMatrice[_rand.Next(0, auxFlatMatrice.Count)];
+                State.WinningNumbers[index] = currentNumber;
+                auxFlatMatrice.Remove(currentNumber);
+            }
+        }
+
+        public void Read()
+        {
+            var input = Console.ReadLine()?.Trim();
+            switch (input)
+            {
+                case Constants.NewGame:
+                    if (Stage == GameStage.MainMenu) { NewGame(); }
+                    else { Printer.PrintInvalidInput(); }
+
+                    break;
+                case Constants.ContinueGame:
+                    if (Stage == GameStage.MainMenu) { ContinueGame(); }
+                    else { Printer.PrintInvalidInput(); }
+                    break;
+                case Constants.NewSesion:
+                    if (Stage != GameStage.MainMenu) { NewSession(); }
+                    else { Printer.PrintInvalidInput(); }
+
+                    break;
+                case Constants.EndSession:
+                    if (Stage == GameStage.InGame) { EndSession(); }
+                    else { Printer.PrintInvalidInput(); }
+
+                    break;
+                case Constants.ExitGame:
+                    ExitGame();
+                    break;
+                default:
+                    if (Stage == GameStage.InGame)
+                    {
+                        int userNumber;
+                        if (int.TryParse(input, out userNumber))
+                        {
+                            if (VerifyNumber(userNumber))
+                            {
+                                GoToNextStep(userNumber);
+                            }
+                            else
+                            {
+                                Printer.PrintInvalidNumber(userNumber);
+                            }
+                        }
+                        else
+                        {
+                            Printer.PrintInvalidInput();
+                        }
+                    }
+                    else
+                    {
+                        Printer.PrintInvalidInput();
+                    }
+                    Read();
+
+                    break;
+            }
+        }
+    }
 }

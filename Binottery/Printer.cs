@@ -13,43 +13,42 @@ namespace Binottery
             Console.Clear();
         }
 
-		internal static void PrintEmptyLines(int numberOfLines)
+        internal static void PrintEmptyLines(int numberOfLines)
         {
-            for (int i = 0; i< numberOfLines; i++)
+            for (int i = 0; i < numberOfLines; i++)
             {
                 Console.WriteLine();
             }
         }
         internal static void PrintGrid(State state)
         {
-            //TODO
-            //Console.WriteLine(("The “Binottery” game").PadLeft(40));
+            Console.WriteLine(("The “Binottery” game").PadLeft(40));
+            int currentNumber;
+            for (var rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
+            {
+                for (var index = 0; index < Constants.MatrixNumberOfColumns; index++)
+                {
+                    currentNumber = state.GeneratedNumbers[rowNumber + index * 3];
 
-            //for (int rowNumber = 0; rowNumber< Constants.MatrixNumberOfRows; rowNumber++)
-            //{
-            //    for (int colNumber = 0; colNumber < Constants.MatrixNumberOfColumns; colNumber++)
-            //    {
-            //        var currentNumber = state.GeneratedNumbers[colNumber, rowNumber];
+                    if (state.UserNumbers.Contains(currentNumber))
+                    {
+                        if (state.WinningNumbers.Contains(currentNumber))
+                        {
+                            Console.Write((currentNumber.ToString() + "*+*").PadRight(7));
+                        }
+                        else
+                        {
+                            Console.Write((currentNumber.ToString() + "*-*").PadRight(7));
+                        }
+                    }
+                    else
+                    {
+                        Console.Write(currentNumber.ToString().PadRight(7));
+                    }
+                }
 
-            //        if (state.UserNumbers.Contains(currentNumber))
-            //        {
-            //            if (state.WinningNumbers.Contains(currentNumber))
-            //            {
-            //                Console.Write((currentNumber.ToString() + "*+*").PadRight(7));
-            //            }
-            //            else
-            //            {
-            //                Console.Write((currentNumber.ToString() + "*-*").PadRight(7));
-            //            }
-            //        }
-            //        else
-            //        {
-            //            Console.Write(currentNumber.ToString().PadRight(7));
-            //        }
-            //    }
-
-            //    PrintEmptyLines(2);
-            //}
+                PrintEmptyLines(2);
+            }
         }
         internal static void PrintInvalidInput()
         {
@@ -64,33 +63,33 @@ namespace Binottery
             Console.WriteLine(Constants.Options);
             switch (stage)
             {
-	            case GameStage.MainMenu:
-		            Console.WriteLine(Constants.NewSession);
-		            Console.WriteLine(Constants.ContinueGame);
-		            Console.WriteLine(Constants.ExitGame);
+                case GameStage.MainMenu:
+                    Console.WriteLine(Constants.NewGame);
+                    Console.WriteLine(Constants.ContinueGame);
+                    Console.WriteLine(Constants.ExitGame);
                     break;
-	            case GameStage.Started:
-		            Console.WriteLine(Constants.NewGame);
-		            Console.WriteLine(Constants.ExitGame);
+                case GameStage.Started:
+                    Console.WriteLine(Constants.NewSesion);
+                    Console.WriteLine(Constants.ExitGame);
                     break;
-	            case GameStage.InGame:
-		            Console.WriteLine(Constants.EnterNumber);
-		            Console.WriteLine(Constants.NewGame);
-		            Console.WriteLine(Constants.EndSession);
-		            Console.WriteLine(Constants.ExitGame);
+                case GameStage.InGame:
+                    Console.WriteLine(Constants.EnterNumber);
+                    Console.WriteLine(Constants.NewSesion);
+                    Console.WriteLine(Constants.EndSession);
+                    Console.WriteLine(Constants.ExitGame);
                     break;
-	            case GameStage.EndGame:
-		            Console.WriteLine(Constants.NewGame);
-		            Console.WriteLine(Constants.ExitGame);
+                case GameStage.EndGame:
+                    Console.WriteLine(Constants.NewSesion);
+                    Console.WriteLine(Constants.ExitGame);
                     break;
-	            default:
-		            throw new ArgumentOutOfRangeException(nameof(stage), stage, null);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(stage), stage, null);
             }
         }
 
-        public static void PrintScore()
+        public static void PrintScore(int score)
         {
-	        throw new NotImplementedException();
+            Console.WriteLine($"Congratulations, you won {score}$!");
         }
     }
 }

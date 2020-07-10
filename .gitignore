@@ -1,3 +1,6 @@
 /.vs
 /Binottery/bin/
 /Binottery/obj/
+/Binottery.Test/bin/Debug/
+/Binottery.Test/obj/Debug/netcoreapp3.1
+/Binottery.Test/obj/Binottery.Test.csproj.nuget.cache

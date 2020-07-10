@@ -23,9 +23,6 @@ namespace Binottery
         internal static void LoadState(string path, State state)
         {
             var lines = File.ReadAllLines(path);
-
-
-
         }
 
         public static T ReadFromXmlFile<T>(string filePath) where T : new()

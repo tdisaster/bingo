@@ -19,7 +19,7 @@ namespace Binottery.Util
 
         private Random  Rand = new Random((int)DateTime.Now.Ticks);
 
-		int[] GenerateNumbers(int multiplier)
+		public int[] GenerateNumbers(int multiplier)
 		{
 			var result = new int[3];
 
