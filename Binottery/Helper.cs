@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Binottery.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -9,16 +10,6 @@ namespace Binottery
 {
     public class Helper
     {
-        public enum GameStage
-        {
-            Begining = 0,
-            FirstNumber,
-            SecondNumber,
-            ThirdNumber,
-            FourthNumber,
-            EndOfGame
-        }
-
         public static List<int> FillListFromRange(int smallestNumber, int biggestNumber)
         {
             List<int> listOfNumbers = new List<int>();
@@ -27,39 +18,6 @@ namespace Binottery
                 listOfNumbers.Add(index);
             }
             return listOfNumbers;
-        }
-
-        public static void WriteToXmlFile(string path, State state)
-        {
-            using (XmlWriter writer = XmlWriter.Create("theGarage.xml"))
-            {
-                writer.WriteStartDocument();
-
-                writer.WriteStartElement("State");
-
-                writer.WriteStartElement("GeneratedNumbers");
-                //
-                for (int rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
-                {
-                    for (int columnNumber = 0; columnNumber < Constants.MatrixNumberOfColumns; columnNumber++)
-                    {
-                        writer.WriteString(state.GeneratedNumbers[columnNumber, rowNumber].ToString());
-                        writer.WriteString(",");
-                    }
-                }
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("WinningNumbers");
-                //
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("UserNumbers");
-                //
-                writer.WriteEndElement();
-
-                writer.WriteEndElement();
-
-            }
         }
 
         internal static void LoadState(string path, State state)

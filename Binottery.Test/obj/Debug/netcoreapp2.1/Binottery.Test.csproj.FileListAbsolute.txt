@@ -1,0 +1,17 @@
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\testhost.exe
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\testhost.dll
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Binottery.Test.deps.json
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Binottery.Test.runtimeconfig.json
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Binottery.Test.runtimeconfig.dev.json
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Binottery.Test.dll
+D:\Work\bingo\Binottery.Test\bin\Debug\netcoreapp2.1\Binottery.Test.pdb
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.csprojAssemblyReference.cache
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.AssemblyInfoInputs.cache
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.AssemblyInfo.cs
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.csproj.CoreCompileInputs.cache
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.dll
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.pdb
+D:\Work\bingo\Binottery.Test\obj\Debug\netcoreapp2.1\Binottery.Test.genruntimeconfig.cache
