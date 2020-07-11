@@ -93,7 +93,12 @@ namespace Binottery
             Printer.ClearScreen();
             State.UserNumbers.Add(userNumber);
             Printer.PrintGrid(State);
-            Printer.PrintEmptyLines(1);
+            Printer.PrintEmptyLines();
+
+            if (State.WinningNumbers.Contains(userNumber))
+            {
+                State.UserCredit++;
+            }
 
             if (State.UserNumbers.Count == Constants.NumberOfTries)
             {
@@ -102,7 +107,6 @@ namespace Binottery
                 State.UserCredit += currentLuckyNumbers;
                 if (currentLuckyNumbers == Constants.NumberOfTries)
                 {
-                    //
                     State.UserCredit *= 2;
                 }
                 Stage = GameStage.EndGame;

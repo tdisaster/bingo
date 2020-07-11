@@ -11,6 +11,7 @@ namespace Binottery
         internal static void PrintAvailableOptions(GameStage stage)
         {
             Console.WriteLine(Constants.Options);
+            PrintEmptyLines();
             switch (stage)
             {
                 case GameStage.MainMenu:
@@ -59,10 +60,11 @@ namespace Binottery
                         Console.Write(currentNumber.ToString().PadRight(7));
                     }
                 }
-                PrintEmptyLines(1);
-                PrintScore(state.UserCredit);
-                PrintEmptyLines(1);
+                PrintEmptyLines();
             }
+            PrintEmptyLines();
+            PrintCurrentCredit(state.UserCredit);
+            PrintEmptyLines();
         }
 
         internal static void ClearScreen()
@@ -70,7 +72,7 @@ namespace Binottery
             Console.Clear();
         }
 
-        internal static void PrintEmptyLines(int numberOfLines)
+        internal static void PrintEmptyLines(int numberOfLines = 1)
         {
             for (var i = 0; i < numberOfLines; i++)
             {
@@ -112,6 +114,11 @@ namespace Binottery
             }
 
             Console.WriteLine($"You have more than enough: {score}$. You can type 'end' to start from scratch.");
+        }
+
+        public static void PrintCurrentCredit(int score)
+        {
+            Console.WriteLine($"Current credit is: {score}$");
         }
     }
 }
