@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace Binottery.Util
 {
-    class NumberGenerator
+    public class NumberGenerator
     {
-        private readonly List<int> _numbersZeroToNine = new List<int>();
-        private readonly List<int> _numbersOfMatrixIndexes = new List<int>();
+        private List<int> Digits { get; } = new List<int>();
+        private List<int> MatrixIndexes { get; }= new List<int>();
         private readonly Random _rand = new Random((int)DateTime.Now.Ticks);
 
         public NumberGenerator()
         {
             for (var i = 0; i < 10; i++)
             {
-                _numbersZeroToNine.Add(i);
+                Digits.Add(i);
             }
             for (var i = 0; i < Constants.MatrixNumberOfColumns * Constants.MatrixNumberOfRows; i++)
             {
-                _numbersOfMatrixIndexes.Add(i);
+                MatrixIndexes.Add(i);
             }
         }
 
@@ -29,11 +29,11 @@ namespace Binottery.Util
 
             for (var rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
             {
-                result[rowNumber] = _numbersZeroToNine[_rand.Next(0, _numbersZeroToNine.Count)];
-                _numbersZeroToNine.Remove(result[rowNumber]);
+                result[rowNumber] = Digits[_rand.Next(0, Digits.Count)];
+                Digits.Remove(result[rowNumber]);
             }
 
-            _numbersZeroToNine.AddRange(result);
+            Digits.AddRange(result);
             return result.Select(r => multiplier * 10 + r).ToArray();
         }
 
@@ -43,12 +43,12 @@ namespace Binottery.Util
             var result = new int[Constants.NumberOfWinningOptions];
             for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
             {
-                result[index] = _numbersOfMatrixIndexes[
+                result[index] = MatrixIndexes[
 	                _rand.Next(0, Constants.MatrixNumberOfRows * Constants.MatrixNumberOfColumns - index)
                 ];
-                _numbersOfMatrixIndexes.Remove(result[index]);
+                MatrixIndexes.Remove(result[index]);
             }
-            _numbersOfMatrixIndexes.AddRange(result);
+            MatrixIndexes.AddRange(result);
             return result;
         }
     }
