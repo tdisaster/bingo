@@ -6,23 +6,22 @@ namespace Binottery.Util
 {
     class NumberGenerator
     {
-        private readonly List<int> NumbersZeroToNine;
-        private List<int> NumbersOfMatrixIndexes;
-
-        private Random Rand = new Random((int)DateTime.Now.Ticks);
+        private readonly List<int> _numbersZeroToNine;
+        private readonly List<int> _numbersOfMatrixIndexes;
+        private readonly Random _rand = new Random((int)DateTime.Now.Ticks);
 
         public NumberGenerator()
         {
-            NumbersZeroToNine = new List<int>();
+            _numbersZeroToNine = new List<int>();
             for (var i = 0; i < 10; i++)
             {
-                NumbersZeroToNine.Add(i);
+                _numbersZeroToNine.Add(i);
             }
 
-            NumbersOfMatrixIndexes = new List<int>();
+            _numbersOfMatrixIndexes = new List<int>();
             for (var i = 0; i < Constants.MatrixNumberOfColumns * Constants.MatrixNumberOfRows; i++)
             {
-                NumbersOfMatrixIndexes.Add(i);
+                _numbersOfMatrixIndexes.Add(i);
             }
         }
 
@@ -31,13 +30,13 @@ namespace Binottery.Util
         {
             var result = new int[Constants.MatrixNumberOfRows];
 
-            for (int rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
+            for (var rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
             {
-                result[rowNumber] = NumbersZeroToNine[Rand.Next(0, NumbersZeroToNine.Count)];
-                NumbersZeroToNine.Remove(result[rowNumber]);
+                result[rowNumber] = _numbersZeroToNine[_rand.Next(0, _numbersZeroToNine.Count)];
+                _numbersZeroToNine.Remove(result[rowNumber]);
             }
 
-            NumbersZeroToNine.AddRange(result);
+            _numbersZeroToNine.AddRange(result);
             return result.Select(r => multiplier * 10 + r).ToArray();
         }
 
@@ -46,13 +45,13 @@ namespace Binottery.Util
         {
             var result = new int[Constants.NumberOfWinningOptions];
 
-            for (int index = 0; index < Constants.NumberOfWinningOptions; index++)
+            for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
             {
-                result[index] = NumbersOfMatrixIndexes[Rand.Next(0, (Constants.MatrixNumberOfRows * Constants.MatrixNumberOfColumns - index))];
-                NumbersOfMatrixIndexes.Remove(result[index]);
+                result[index] = _numbersOfMatrixIndexes[_rand.Next(0, (Constants.MatrixNumberOfRows * Constants.MatrixNumberOfColumns - index))];
+                _numbersOfMatrixIndexes.Remove(result[index]);
             }
 
-            NumbersOfMatrixIndexes.AddRange(result);
+            _numbersOfMatrixIndexes.AddRange(result);
             return result;
         }
     }

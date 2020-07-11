@@ -10,10 +10,8 @@ namespace Binottery
 		private static void Main(string[] args)
 		{
 			var gameEngine = new GameEngine(new BinaryGamePersister());
-			gameEngine.Print();
+			gameEngine.PrintOptions();
 			gameEngine.Read();
 		}
-
-		
 	}
 }

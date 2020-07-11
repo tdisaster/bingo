@@ -13,11 +13,12 @@ namespace Binottery
 
         public const string NewGame = "new";
         public const string ContinueGame = "continue";
-        public const string NewSesion = "show";
+        public const string NewSession = "show";
         public const string EndSession= "end";
         public const string ExitGame = "exit";
-        public static string EnterNumber = "0-89 Select a valid number that appears on the ticket except the ones already selected";
-        public static string Options = "You have the following options:";
+        public const string EnterNumber = "0-89 Select a valid number that appears on the ticket except the ones already selected";
+        public const string Options = "You have the following options:";
+        public const string TheBinotteryGame = "The “Binottery” game";
 
     }
 }
