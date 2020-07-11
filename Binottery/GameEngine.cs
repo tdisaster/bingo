@@ -42,8 +42,16 @@ namespace Binottery
         //continue
         public void ContinueGame()
         {
-	        State = Persister.Load();
-            Stage = GameStage.Started;
+            if (Persister.HasSaveState())
+            {
+                State = Persister.Load();
+                Stage = GameStage.Started;
+            }
+            else
+            {
+                Printer.PrintSaveNotExist();
+
+            }
             Printer.ClearScreen();
             Printer.PrintAvailableOptions(Stage);
         }
@@ -58,13 +66,10 @@ namespace Binottery
             Stage = State.UserNumbers.Count == Constants.NumberOfTries ? GameStage.EndGame : GameStage.InGame;
             Printer.ClearScreen();
 
+            Printer.PrintGrid(State);
             if (Stage == GameStage.EndGame)
             {
                 Printer.PrintScore(State.UserCredit);
-            }
-            else
-            {
-                Printer.PrintGrid(State);
             }
 
             Printer.PrintAvailableOptions(Stage);
@@ -84,14 +89,12 @@ namespace Binottery
             Environment.Exit(1);
         }
         //0-89
-        public void GoToNextStep(int userNumber)
+        public void GoToNextStep(int newNumber)
         {
             Printer.ClearScreen();
-            State.UserNumbers.Add(userNumber);
-            Printer.PrintGrid(State);
-            Printer.PrintEmptyLines();
+            State.UserNumbers.Add(newNumber);
 
-            if (State.WinningNumbers.Contains(userNumber))
+            if (State.WinningNumbers.Contains(newNumber))
             {
                 State.UserCredit++;
             }
@@ -100,19 +103,19 @@ namespace Binottery
             {
                 var currentLuckyNumbers = State.UserNumbers.Count(userNr => State.WinningNumbers.Contains(userNr));
 
-                State.UserCredit += currentLuckyNumbers;
                 if (currentLuckyNumbers == Constants.NumberOfTries)
                 {
                     State.UserCredit *= 2;
                 }
                 Stage = GameStage.EndGame;
-                Printer.PrintScore(State.UserCredit);
-                Printer.PrintAvailableOptions(Stage);
             }
-            else
+            Printer.PrintGrid(State);
+
+            if (State.UserNumbers.Count == Constants.NumberOfTries)
             {
-                Printer.PrintAvailableOptions(Stage);
+                Printer.PrintScore(State.UserCredit);
             }
+            Printer.PrintAvailableOptions(Stage);
         }
 
         #endregion

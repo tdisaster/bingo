@@ -11,27 +11,34 @@ namespace Binottery
         internal static void PrintAvailableOptions(GameStage stage)
         {
             Console.WriteLine(Constants.Options);
-            PrintEmptyLines();
+            PrintVerticalLine();
             switch (stage)
             {
                 case GameStage.MainMenu:
                     Console.WriteLine(Constants.NewGame);
                     Console.WriteLine(Constants.ContinueGame);
                     Console.WriteLine(Constants.ExitGame);
+                    PrintVerticalLine();
                     break;
                 case GameStage.Started:
                     Console.WriteLine(Constants.NewSession);
                     Console.WriteLine(Constants.ExitGame);
+                    PrintVerticalLine();
+
                     break;
                 case GameStage.InGame:
                     Console.WriteLine(Constants.EnterNumber);
                     Console.WriteLine(Constants.NewSession);
                     Console.WriteLine(Constants.EndSession);
                     Console.WriteLine(Constants.ExitGame);
+                    PrintVerticalLine();
+
                     break;
                 case GameStage.EndGame:
                     Console.WriteLine(Constants.NewSession);
                     Console.WriteLine(Constants.ExitGame);
+                    PrintVerticalLine();
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(stage), stage, null);
@@ -41,6 +48,7 @@ namespace Binottery
         internal static void PrintGrid(State state)
         {
             Console.WriteLine(Constants.TheBinotteryGame.PadLeft(40));
+            PrintEmptyLines();
 
             int currentNumber;
             for (var rowNumber = 0; rowNumber < Constants.MatrixNumberOfRows; rowNumber++)
@@ -67,6 +75,8 @@ namespace Binottery
             PrintEmptyLines();
         }
 
+        
+
         internal static void ClearScreen()
         {
             Console.Clear();
@@ -78,6 +88,11 @@ namespace Binottery
             {
                 Console.WriteLine();
             }
+        }
+
+        internal static void PrintVerticalLine()
+        {
+                Console.WriteLine("--------------------------------------------------------");
         }
 
         internal static void PrintInvalidInput()
@@ -112,13 +127,22 @@ namespace Binottery
             {
                 Console.WriteLine($"I think you should take it easy, you have enough: {score}$");
             }
+            else
+            {
+                Console.WriteLine($"You have more than enough: {score}$. You can type 'end' to start from scratch.");
+            }
 
-            Console.WriteLine($"You have more than enough: {score}$. You can type 'end' to start from scratch.");
+            PrintEmptyLines();
         }
 
         public static void PrintCurrentCredit(int score)
         {
-            Console.WriteLine($"Current credit is: {score}$");
+            Console.WriteLine($"Credit:{score}");
+        }
+
+        public static void PrintSaveNotExist()
+        {
+            Console.WriteLine("Save file does not found");
         }
     }
 }
