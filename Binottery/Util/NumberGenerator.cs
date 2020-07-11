@@ -6,19 +6,16 @@ namespace Binottery.Util
 {
     class NumberGenerator
     {
-        private readonly List<int> _numbersZeroToNine;
-        private readonly List<int> _numbersOfMatrixIndexes;
+        private readonly List<int> _numbersZeroToNine = new List<int>();
+        private readonly List<int> _numbersOfMatrixIndexes = new List<int>();
         private readonly Random _rand = new Random((int)DateTime.Now.Ticks);
 
         public NumberGenerator()
         {
-            _numbersZeroToNine = new List<int>();
             for (var i = 0; i < 10; i++)
             {
                 _numbersZeroToNine.Add(i);
             }
-
-            _numbersOfMatrixIndexes = new List<int>();
             for (var i = 0; i < Constants.MatrixNumberOfColumns * Constants.MatrixNumberOfRows; i++)
             {
                 _numbersOfMatrixIndexes.Add(i);
@@ -41,16 +38,16 @@ namespace Binottery.Util
         }
 
         //Generates x (no of winning numbers) random indexes.
-        public int[] GenerateWinningIndexes(int[] generatedNumbers)
+        public int[] GenerateWinningIndexes()
         {
             var result = new int[Constants.NumberOfWinningOptions];
-
             for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
             {
-                result[index] = _numbersOfMatrixIndexes[_rand.Next(0, (Constants.MatrixNumberOfRows * Constants.MatrixNumberOfColumns - index))];
+                result[index] = _numbersOfMatrixIndexes[
+	                _rand.Next(0, Constants.MatrixNumberOfRows * Constants.MatrixNumberOfColumns - index)
+                ];
                 _numbersOfMatrixIndexes.Remove(result[index]);
             }
-
             _numbersOfMatrixIndexes.AddRange(result);
             return result;
         }

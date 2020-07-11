@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using Binottery.Model;
 
-namespace Binottery.Util
+namespace Binottery.Persister
 {
 	public class BinaryGamePersister  :IGamePersister
 	{
@@ -35,6 +32,12 @@ namespace Binottery.Util
 				//TODO show invalid file exception
 			}
 			return state;
+		}
+
+		public bool HasSaveState()
+		{
+			var fi = new FileInfo(FileName);
+			return fi.Exists;
 		}
 	}
 }
