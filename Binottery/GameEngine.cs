@@ -16,8 +16,6 @@ namespace Binottery
 
         private IGamePersister Persister { get; }
 
-        private int currentLuckyNumbers {get;set;} = 0;
-
         public GameEngine(IGamePersister persister)
         {
             Persister = persister;
@@ -57,7 +55,7 @@ namespace Binottery
             Read();
         }
 
-        public void NewSession()
+        public void OpenOrNewSession()
         {
             if (Stage == GameStage.InGame || Stage == GameStage.EndGame)
             {
@@ -66,9 +64,18 @@ namespace Binottery
                 GenerateRandomWinningNumbers();
             }
 
-            Stage = GameStage.InGame;
+            Stage = State.UserNumbers.Count == 5 ? GameStage.EndGame : GameStage.InGame; 
             Printer.ClearScreen();
-            Printer.PrintGrid(State);
+            
+            if (Stage == GameStage.EndGame)
+            {
+                Printer.PrintScore(State.UserCredit);
+            }
+            else
+            {
+                Printer.PrintGrid(State);
+            }
+
             Printer.PrintAvailableOptions(Stage);
 
             Read();
@@ -118,7 +125,6 @@ namespace Binottery
             }
             else
             {
-                Printer.PrintInvalidNumber(userNumber);
                 return false;
             }
         }
@@ -130,13 +136,19 @@ namespace Binottery
             Printer.PrintGrid(State);
             Printer.PrintEmptyLines(2);
 
-            if (State.WinningNumbers.Contains(userNumber))
-            {
-                currentLuckyNumbers++;
-            }
-
+            
             if (State.UserNumbers.Count == 5)
             {
+                int currentLuckyNumbers = 0;
+                foreach (int userNr in State.UserNumbers)
+                {
+                    if (State.WinningNumbers.Contains(userNr))
+                    {
+                        currentLuckyNumbers++;
+                    }
+                }
+
+
                 State.UserCredit += currentLuckyNumbers;
                 if (currentLuckyNumbers == 5)
                 {
@@ -160,7 +172,7 @@ namespace Binottery
 
             for (var colNumber = 0; colNumber < Constants.MatrixNumberOfColumns; colNumber++)
             {
-                var numbers = numberGenerator.GenerateNumbers(colNumber);
+                var numbers = numberGenerator.GenerateXNumbers(colNumber);
                 for (int index = 0; index < Constants.MatrixNumberOfRows; index++)
                 {
                     State.GeneratedNumbers[colNumber * 3 + index] = numbers[index];
@@ -170,13 +182,12 @@ namespace Binottery
 
         private static void GenerateRandomWinningNumbers()
         {
-            int currentNumber;
-            var auxFlatMatrice = State.GeneratedNumbers.ToList();
-            for (var index = 0; index < Constants.NumberOfWinningOptions; index++)
+            NumberGenerator numberGenerator = new NumberGenerator();
+            int[] winningNumbersIndexes = numberGenerator.GenerateWinningIndexes(State.GeneratedNumbers);
+
+            for (int i = 0;i< Constants.NumberOfWinningOptions; i++)
             {
-                currentNumber = auxFlatMatrice[_rand.Next(0, auxFlatMatrice.Count)];
-                State.WinningNumbers[index] = currentNumber;
-                auxFlatMatrice.Remove(currentNumber);
+                State.WinningNumbers[i] = State.GeneratedNumbers[winningNumbersIndexes[i]];
             }
         }
 
@@ -188,21 +199,18 @@ namespace Binottery
                 case Constants.NewGame:
                     if (Stage == GameStage.MainMenu) { NewGame(); }
                     else { Printer.PrintInvalidInput(); }
-
                     break;
                 case Constants.ContinueGame:
                     if (Stage == GameStage.MainMenu) { ContinueGame(); }
                     else { Printer.PrintInvalidInput(); }
                     break;
                 case Constants.NewSesion:
-                    if (Stage != GameStage.MainMenu) { NewSession(); }
+                    if (Stage != GameStage.MainMenu) { OpenOrNewSession(); }
                     else { Printer.PrintInvalidInput(); }
-
                     break;
                 case Constants.EndSession:
                     if (Stage == GameStage.InGame) { EndSession(); }
                     else { Printer.PrintInvalidInput(); }
-
                     break;
                 case Constants.ExitGame:
                     ExitGame();

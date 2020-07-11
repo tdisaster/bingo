@@ -15,7 +15,7 @@ namespace Binottery.Util
 		public void Save(State state)
 		{
 			BinaryFormatter formatter = new BinaryFormatter();
-			var fileStream = File.Open(FileName, FileMode.CreateNew);
+			var fileStream = File.Open(FileName, FileMode.OpenOrCreate);
 			formatter.Serialize(fileStream, state);
 			fileStream.Close();
 		}
@@ -28,6 +28,7 @@ namespace Binottery.Util
 				BinaryFormatter formatter = new BinaryFormatter();
 				var fileStream = File.Open(FileName, FileMode.Open);
 				state = (State) formatter.Deserialize(fileStream);
+				fileStream.Close();
 			}
 			catch (SerializationException)
 			{
